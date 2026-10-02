@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GRNLR_2002</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="instrument-shell">
+    <header class="brand-row">
+      <div>
+        <div class="micro">LOCAL GRANULAR INSTRUMENT</div>
+        <h1>GRNLR_2002</h1>
+      </div>
+      <div class="header-actions">
+        <label class="bpm-box">BPM <input id="bpm" type="number" min="40" max="240" value="138" /></label>
+        <button id="loadBtn" class="soft-btn">LOAD FILE</button>
+        <input id="fileInput" type="file" accept="audio/*" hidden />
+      </div>
+    </header>
+
+    <section id="dropZone" class="screen-panel">
+      <div class="screen-topline">
+        <span id="fileName">DROP MP3 / WAV / FLAC / OGG HERE</span>
+        <span id="statusText">NO SAMPLE</span>
+      </div>
+
+      <div class="screen-wrap">
+        <canvas id="waveform" width="1400" height="420"></canvas>
+        <div id="sliceOverlay" class="slice-overlay"></div>
+        <div id="playhead" class="playhead"></div>
+        <div id="positionMarker" class="position-marker"></div>
+        <div class="screen-glow"></div>
+      </div>
+
+      <div class="timeline-row">
+        <span id="timeText">00:00.000</span>
+        <div class="transport">
+          <button id="playBtn" class="transport-btn" disabled>PLAY</button>
+          <button id="stopBtn" class="transport-btn" disabled>STOP</button>
+          <button id="freezeBtn" class="transport-btn toggle">FREEZE</button>
+        </div>
+        <span id="durationText">00:00.000</span>
+      </div>
+    </section>
+
+    <section class="mode-panel">
+      <div class="mode-head">
+        <div class="mode-switch" id="modeSwitch">
+          <button data-mode="hold" class="active">HOLD</button>
+          <button data-mode="step">STEP</button>
+          <button data-mode="keys">KEYS</button>
+        </div>
+        <div class="mode-meta">
+          <button id="syncBtn" class="chip active">SYNC</button>
+          <button id="freeBtn" class="chip">FREE</button>
+          <button id="cellsBtn" class="chip">16 CELLS</button>
+          <select id="clockSelect" class="clock-select" aria-label="Step clock">
+            <option value="4">1/4</option>
+            <option value="8">1/8</option>
+            <option value="16" selected>1/16</option>
+            <option value="32">1/32</option>
+          </select>
+          <button id="resetCellsBtn" class="chip">RESET</button>
+        </div>
+      </div>
+      <div id="cellRow" class="cell-row"></div>
+      <div class="cell-help" id="cellHelp">HOLD mode: drag POSITION or click the waveform to scan the file.</div>
+    </section>
+
+    <section class="control-panel">
+      <div class="main-knobs">
+        <div class="knob-control" data-param="grainRate" data-min="1" data-max="60" data-value="20" data-step="1" data-label="GRAINS" data-unit="/s"></div>
+        <div class="knob-control" data-param="grainLength" data-min="10" data-max="1000" data-value="220" data-step="1" data-label="LENGTH" data-unit="ms"></div>
+        <div class="knob-control big" data-param="position" data-min="0" data-max="100" data-value="25" data-step="0.1" data-label="POSITION" data-unit="%"></div>
+        <div class="knob-control" data-param="space" data-min="0" data-max="100" data-value="65" data-step="1" data-label="SPACE" data-unit="%"></div>
+        <div class="knob-control" data-param="chaos" data-min="0" data-max="100" data-value="10" data-step="1" data-label="CHAOS" data-unit="%"></div>
+        <div class="knob-control" data-param="tune" data-min="-24" data-max="24" data-value="0" data-step="1" data-label="TUNE" data-unit="st"></div>
+        <div class="knob-control" data-param="output" data-min="-48" data-max="6" data-value="-6" data-step="0.5" data-label="OUTPUT" data-unit="dB"></div>
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <div class="shape-panel subpanel">
+        <div class="subhead">GRAIN SHAPE</div>
+        <div class="shape-display" id="shapeDisplay">
+          <canvas id="shapeCanvas" width="520" height="150"></canvas>
+        </div>
+        <div class="shape-buttons" id="shapeButtons">
+          <button data-shape="hann" class="active">HANN</button>
+          <button data-shape="gaussian">GAUSSIAN</button>
+          <button data-shape="triangle">TRIANGLE</button>
+          <button data-shape="square">SQUARE</button>
+        </div>
+      </div>
+
+      <div class="y2k-panel subpanel">
+        <div class="subhead">Y2K / STUTTER</div>
+        <div class="mini-knobs">
+          <div class="knob-control mini" data-param="spray" data-min="0" data-max="100" data-value="8" data-step="1" data-label="SPRAY" data-unit="%"></div>
+          <div class="knob-control mini" data-param="pitchJitter" data-min="0" data-max="12" data-value="0.4" data-step="0.1" data-label="JITTER" data-unit="st"></div>
+          <div class="knob-control mini" data-param="reverseChance" data-min="0" data-max="100" data-value="8" data-step="1" data-label="REVERSE" data-unit="%"></div>
+          <div class="knob-control mini" data-param="stutterChance" data-min="0" data-max="100" data-value="0" data-step="1" data-label="STUTTER" data-unit="%"></div>
+          <div class="knob-control mini" data-param="crush" data-min="0" data-max="100" data-value="0" data-step="1" data-label="CRUSH" data-unit="%"></div>
+          <div class="knob-control mini" data-param="reverb" data-min="0" data-max="100" data-value="18" data-step="1" data-label="AIR" data-unit="%"></div>
+        </div>
+        <div class="fx-row">
+          <button id="microStutterBtn" class="effect-btn">MICRO STUTTER</button>
+          <button id="reverseLockBtn" class="effect-btn">REVERSE LOCK</button>
+          <button id="randomizeBtn" class="effect-btn">RANDOMIZE</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="preset-panel subpanel">
+      <div class="subhead">STARTING POINTS</div>
+      <div class="preset-grid" id="presetGrid">
+        <button data-preset="ambientPad">AMBIENT PAD</button>
+        <button data-preset="rhythmicStutter">RHYTHMIC STUTTER</button>
+        <button data-preset="playableSlices">PLAYABLE SLICES</button>
+        <button data-preset="frozenDrone">FROZEN DRONE</button>
+        <button data-preset="digitalAngel">DIGITAL ANGEL</button>
+        <button data-preset="brokenCd">BROKEN CD</button>
+        <button data-preset="glassVocal">GLASS VOCAL</button>
+        <button data-preset="clubCut">CLUB CUT</button>
+      </div>
+      <div class="footer-strip">
+        <span id="presetName">INIT</span>
+        <span id="keyboardHint">KEYS mode: A W S E D F T G Y H U J K = slices</span>
+        <button id="recordBtn" class="record-btn" disabled>RECORD OUTPUT</button>
+        <a id="downloadLink" class="record-btn hidden" download="grnlr_2002_take.webm">DOWNLOAD TAKE</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
